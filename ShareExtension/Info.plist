@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   Info.plist da Share Extension (spec 8.3).
-  NSExtensionActivationRule define quando "Leitor.md" aparece na folha de
-  compartilhamento: arquivos (markdown), URLs web (link do GitHub, spec 8.4) e
-  texto simples. Refinar o predicado por extensão no épico 8.3.
+  A regra de ativação (quando "Leitor.md" aparece na folha de compartilhamento:
+  arquivos markdown, URLs web do GitHub e texto) fica dentro de
+  NSExtensionAttributes — chave exigida pela validação de build da Apple.
 -->
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -30,14 +30,17 @@
 		<string>com.apple.share-services</string>
 		<key>NSExtensionPrincipalClass</key>
 		<string>$(PRODUCT_MODULE_NAME).ShareViewController</string>
-		<key>NSExtensionActivationRule</key>
+		<key>NSExtensionAttributes</key>
 		<dict>
-			<key>NSExtensionActivationSupportsFileWithMaxCount</key>
-			<integer>1</integer>
-			<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
-			<integer>1</integer>
-			<key>NSExtensionActivationSupportsText</key>
-			<true/>
+			<key>NSExtensionActivationRule</key>
+			<dict>
+				<key>NSExtensionActivationSupportsFileWithMaxCount</key>
+				<integer>1</integer>
+				<key>NSExtensionActivationSupportsWebURLWithMaxCount</key>
+				<integer>1</integer>
+				<key>NSExtensionActivationSupportsText</key>
+				<true/>
+			</dict>
 		</dict>
 	</dict>
 </dict>
