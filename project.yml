@@ -1,0 +1,104 @@
+# project.yml — fonte de verdade do projeto Xcode (gerado via `xcodegen generate`).
+# O .xcodeproj é derivado deste arquivo e fica no .gitignore (spec 4 / decisão XcodeGen).
+name: LeitorMd
+
+options:
+  bundleIdPrefix: com.dablab            # mesmo prefixo do Hora do Remédio (spec 4)
+  deploymentTarget:
+    iOS: "17.0"                         # exigência do SwiftData (spec 4)
+  developmentLanguage: pt-BR            # idioma principal (spec 8.8 / 17)
+  createIntermediateGroups: true
+
+settings:
+  base:
+    DEVELOPMENT_TEAM: XGZW6Y6K25        # team de assinatura reaproveitado do Hora do Remédio (spec 4)
+    SWIFT_VERSION: "5.0"
+    MARKETING_VERSION: "1.0.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+    # Concurrency estrita fica em `minimal` por ora: `complete` só gera ruído de
+    # warnings da macro #Predicate do SwiftData (código gerado pela Apple). Reavaliar
+    # por target ao adotar o modo de linguagem Swift 6.
+    SWIFT_STRICT_CONCURRENCY: minimal
+
+targets:
+  # ---------------------------------------------------------------------------
+  # App principal (SwiftUI)
+  # ---------------------------------------------------------------------------
+  LeitorMd:
+    type: application
+    platform: iOS
+    sources:
+      - path: Sources
+        excludes:
+          - "**/.DS_Store"
+      - path: WebBundle                 # bundle web local de renderização (spec 8.5); copiado como pasta
+        type: folder
+      - path: Resources                 # Asset Catalog + variant groups de localização (pt-BR/en)
+        excludes:
+          - "**/.DS_Store"
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dablab.leitormd
+        INFOPLIST_FILE: Sources/App/Info.plist
+        GENERATE_INFOPLIST_FILE: NO
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        TARGETED_DEVICE_FAMILY: "1,2"    # iPhone + iPad (spec 17)
+        SUPPORTS_MACCATALYST: NO         # iOS-only (spec 3)
+      configs:
+        # Entitlements por configuração: Debug usa aps-environment=development
+        # (debug em device); Release usa production (senão o App Store recusa o upload).
+        Debug:
+          CODE_SIGN_ENTITLEMENTS: Sources/App/LeitorMd.entitlements
+        Release:
+          CODE_SIGN_ENTITLEMENTS: Sources/App/LeitorMdRelease.entitlements
+    dependencies:
+      - target: LeitorMdShareExtension
+
+  # ---------------------------------------------------------------------------
+  # Share Extension (spec 8.3) — no scaffolding é um stub; a lógica de handoff
+  # via App Group entra no épico 8.3, junto com o setup do portal Apple.
+  # ---------------------------------------------------------------------------
+  LeitorMdShareExtension:
+    type: app-extension
+    platform: iOS
+    sources:
+      - path: ShareExtension
+      # Código puro compartilhado com o app (Foundation, sem SwiftData) — spec 8.3.
+      - path: Sources/ModeloDeDados/IdentificadoresApp.swift
+      - path: Sources/Compartilhado/Handoff.swift
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dablab.leitormd.share
+        INFOPLIST_FILE: ShareExtension/Info.plist
+        CODE_SIGN_ENTITLEMENTS: ShareExtension/ShareExtension.entitlements
+        GENERATE_INFOPLIST_FILE: NO
+
+  # ---------------------------------------------------------------------------
+  # Testes unitários das regras puras (spec 11 / 22)
+  # ---------------------------------------------------------------------------
+  LeitorMdTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: Tests
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.dablab.leitormd.tests
+        GENERATE_INFOPLIST_FILE: YES
+    dependencies:
+      - target: LeitorMd
+
+schemes:
+  LeitorMd:
+    build:
+      targets:
+        LeitorMd: all
+        LeitorMdTests: [test]
+    run:
+      # Configuração local de StoreKit para testar a compra no Simulador (spec 8.9),
+      # sem depender do App Store Connect.
+      storeKitConfiguration: Products.storekit
+    test:
+      targets:
+        - LeitorMdTests

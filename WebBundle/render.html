@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<!--
+  render.html — renderizador em WKWebView (spec 8.5).
+  Carrega o bundle local (sem rede — spec 0.4/4): markdown-it + plugins (task-lists,
+  footnote, texmath), highlight.js, KaTeX e Mermaid. A orquestração fica em bridge.js.
+-->
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <link rel="stylesheet" href="vendor/katex/katex.min.css">
+  <link rel="stylesheet" href="render.css">
+  <!-- Tema de realce de código, trocado dinamicamente por bridge.js (spec 8.5). -->
+  <link id="tema-codigo" rel="stylesheet" href="vendor/hljs-themes/github.min.css">
+  <script src="vendor/markdown-it.min.js"></script>
+  <script src="vendor/markdown-it-task-lists.min.js"></script>
+  <script src="vendor/markdown-it-footnote.min.js"></script>
+  <script src="vendor/markdown-it-texmath.js"></script>
+  <script src="vendor/highlight.min.js"></script>
+  <script src="vendor/katex/katex.min.js"></script>
+  <script src="vendor/mermaid.min.js"></script>
+</head>
+<body>
+  <main id="conteudo" class="markdown-body"></main>
+  <script src="bridge.js"></script>
+</body>
+</html>

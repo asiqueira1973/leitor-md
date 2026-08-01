@@ -1,0 +1,32 @@
+/* English localization (fallback) — spec 8.8 / 17. */
+
+/* Brand / sections */
+"app.nome" = "Leitor.md";
+"secao.recentes" = "Recent";
+"secao.favoritos" = "Favorites";
+
+/* Empty states */
+"recentes.vazio" = "No documents opened yet. Tap Open to get started.";
+"favoritos.vazio" = "Your favorite documents show up here.";
+
+/* Primary buttons */
+"botao.abrir_arquivo" = "Open file";
+"botao.abrir_github" = "Open from GitHub";
+
+/* Onboarding */
+"onboarding.1" = "Read your Markdown files with real typographic quality.";
+"onboarding.2" = "Open straight from iCloud, Google Drive, GitHub or any other app.";
+"onboarding.3" = "No editing, no distraction — just reading, the way it should be.";
+"onboarding.pular" = "Skip";
+"onboarding.comecar" = "Get started";
+
+/* Export — Claude Skill */
+"exportar.skill.nome" = "Skill name";
+"exportar.skill.descricao" = "Describe in a few words when this skill should be used";
+
+/* Error messages */
+"erro.bookmark" = "Couldn't open this file. It may have been moved or deleted.";
+"erro.github.rate_limit" = "GitHub access limit reached. Try again at %@.";
+"erro.github.nao_encontrado" = "Repository or file not found (or it's private — login coming soon).";
+"erro.extensao_invalida" = "This app only opens Markdown files (.md, .markdown, .mdown, .mkd).";
+"erro.rede" = "Couldn't download the file right now. Check your connection and try again.";

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Entitlements da Share Extension (spec 8.3).
+  App Group compartilhado com o app principal para o handoff do conteúdo recebido.
+  No Simulador funciona sem provisionamento; para device, habilitar o App Group
+  no portal Apple (App ID com.dablab.leitormd.share).
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.dablab.leitormd</string>
+	</array>
+</dict>
+</plist>

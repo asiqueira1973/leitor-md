@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Entitlements do app Leitor.md — configuração RELEASE (distribuição/App Store).
+  Idêntico ao de Debug, mas com aps-environment = production: um build enviado ao
+  App Store Connect com aps-environment = development é REJEITADO no upload. O push
+  silencioso do CloudKit (sync de Recentes/Favoritos, spec 8.6) usa este ambiente.
+
+  Debug usa Sources/App/LeitorMd.entitlements (aps-environment = development), para
+  debugar em device com perfil de desenvolvimento. A seleção por configuração está
+  no project.yml (CODE_SIGN_ENTITLEMENTS por config).
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.dablab.leitormd</string>
+	</array>
+	<key>com.apple.developer.icloud-container-identifiers</key>
+	<array>
+		<string>iCloud.com.dablab.leitormd</string>
+	</array>
+	<key>com.apple.developer.icloud-services</key>
+	<array>
+		<string>CloudKit</string>
+	</array>
+	<key>aps-environment</key>
+	<string>production</string>
+</dict>
+</plist>

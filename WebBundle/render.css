@@ -1,0 +1,106 @@
+/* render.css — tipografia e temas do renderizador (spec 8.5 / 0.5 / 16).
+   Família de cor neutra quente ("papel"): creme no claro, tom escuro quente no
+   escuro (nunca preto puro), destaque terracota com moderação (spec 16). */
+
+:root {
+  --tamanho-fonte: 17px;
+
+  /* Tema claro (creme) — padrão */
+  --fundo: #F3EEE4;
+  --texto: #2A2622;
+  --texto-suave: #6b6459;
+  --destaque: #C1673D;
+  --borda: #e3dccd;
+  --codigo-fundo: #efe9dc;
+  --citacao-borda: #d9cfbc;
+  --tabela-listra: #ece5d6;
+}
+
+:root[data-tema="escuro"] {
+  --fundo: #201C17;
+  --texto: #ECE6DA;
+  --texto-suave: #a89f90;
+  --destaque: #D3805A;
+  --borda: #3a332b;
+  --codigo-fundo: #2a251f;
+  --citacao-borda: #4a4136;
+  --tabela-listra: #2a251f;
+}
+
+/* Fonte de leitura (spec 7.3) */
+:root { --fonte: -apple-system, system-ui, "Helvetica Neue", sans-serif; }
+:root[data-fonte="serifada"] { --fonte: Georgia, "Times New Roman", "Iowan Old Style", serif; }
+:root[data-fonte="mono"] { --fonte: ui-monospace, "SF Mono", Menlo, monospace; }
+
+html { color-scheme: light dark; }
+
+body {
+  margin: 0;
+  padding: 1.5rem 1.25rem 4rem;
+  background: var(--fundo);
+  color: var(--texto);
+  font-family: var(--fonte);
+  font-size: var(--tamanho-fonte);
+  line-height: 1.65;
+  -webkit-text-size-adjust: 100%;
+  word-wrap: break-word;
+}
+
+.markdown-body { max-width: 44rem; margin: 0 auto; }
+
+/* Títulos */
+.markdown-body h1, .markdown-body h2, .markdown-body h3,
+.markdown-body h4, .markdown-body h5, .markdown-body h6 {
+  line-height: 1.25; margin: 1.6em 0 0.6em; font-weight: 700;
+}
+.markdown-body h1 { font-size: 1.9em; }
+.markdown-body h2 { font-size: 1.5em; padding-bottom: .2em; border-bottom: 1px solid var(--borda); }
+.markdown-body h3 { font-size: 1.25em; }
+.markdown-body h4 { font-size: 1.05em; }
+.markdown-body h1:first-child, .markdown-body h2:first-child { margin-top: 0; }
+
+.markdown-body p { margin: 0 0 1em; }
+.markdown-body a { color: var(--destaque); text-decoration: none; }
+.markdown-body a:hover { text-decoration: underline; }
+.markdown-body strong { font-weight: 700; }
+.markdown-body hr { border: none; border-top: 1px solid var(--borda); margin: 2em 0; }
+.markdown-body img { max-width: 100%; height: auto; }
+
+/* Listas */
+.markdown-body ul, .markdown-body ol { padding-left: 1.5em; margin: 0 0 1em; }
+.markdown-body li { margin: 0.25em 0; }
+/* Task-lists (spec 8.5) */
+.markdown-body .task-list-item { list-style: none; }
+.markdown-body .task-list-item-checkbox { margin: 0 .5em 0 -1.4em; }
+
+/* Citações */
+.markdown-body blockquote {
+  margin: 0 0 1em; padding: .2em 1em; color: var(--texto-suave);
+  border-left: 3px solid var(--citacao-borda);
+}
+
+/* Código */
+.markdown-body code {
+  font-family: ui-monospace, "SF Mono", Menlo, monospace;
+  font-size: .88em; background: var(--codigo-fundo);
+  padding: .15em .35em; border-radius: 4px;
+}
+.markdown-body pre {
+  background: var(--codigo-fundo); padding: 1em; border-radius: 8px;
+  overflow-x: auto; margin: 0 0 1em;
+}
+.markdown-body pre code { background: none; padding: 0; font-size: .85em; line-height: 1.5; }
+
+/* Tabelas (spec 8.5) */
+.markdown-body table { border-collapse: collapse; width: 100%; margin: 0 0 1em; display: block; overflow-x: auto; }
+.markdown-body th, .markdown-body td { border: 1px solid var(--borda); padding: .5em .75em; text-align: left; }
+.markdown-body th { font-weight: 700; background: var(--tabela-listra); }
+.markdown-body tr:nth-child(even) td { background: var(--tabela-listra); }
+
+/* Notas de rodapé (spec 8.5) */
+.markdown-body .footnotes { border-top: 1px solid var(--borda); margin-top: 2em; font-size: .9em; color: var(--texto-suave); }
+
+/* Matemática (KaTeX) e diagramas (Mermaid) */
+.markdown-body .katex-display { overflow-x: auto; overflow-y: hidden; padding: .2em 0; }
+.markdown-body pre.mermaid { background: none; text-align: center; padding: .5em 0; }
+.markdown-body pre.mermaid svg { max-width: 100%; height: auto; }

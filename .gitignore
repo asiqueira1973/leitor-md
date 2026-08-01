@@ -1,0 +1,20 @@
+# Projeto Xcode é gerado pelo XcodeGen a partir de project.yml — não versionar.
+*.xcodeproj
+*.xcworkspace
+
+# Build / DerivedData
+build/
+DerivedData/
+*.xcresult
+
+# macOS
+.DS_Store
+
+# Assinatura / segredos (nunca versionar)
+*.mobileprovision
+*.p8
+*.p12
+*.certSigningRequest
+
+# Capturas locais para a loja (não são código)
+/printscreens

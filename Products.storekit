@@ -1,0 +1,32 @@
+{
+  "identifier" : "A1B2C3D4",
+  "nonRenewingSubscriptions" : [],
+  "products" : [
+    {
+      "displayPrice" : "19.90",
+      "familyShareable" : false,
+      "internalID" : "1001",
+      "localizations" : [
+        {
+          "description" : "Desbloqueia a leitura de documentos ilimitados.",
+          "displayName" : "Desbloqueio completo",
+          "locale" : "pt_BR"
+        }
+      ],
+      "productID" : "leitor_md_desbloqueio_completo",
+      "referenceName" : "Desbloqueio completo",
+      "type" : "NonConsumable"
+    }
+  ],
+  "settings" : {
+    "_failTransactionsEnabled" : false,
+    "_locale" : "pt_BR",
+    "_storefront" : "BRA",
+    "_storeKitErrors" : []
+  },
+  "subscriptionGroups" : [],
+  "version" : {
+    "major" : 3,
+    "minor" : 0
+  }
+}

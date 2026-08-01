@@ -1,0 +1,70 @@
+// Modelo de dados do app Leitor.md — reflete a seção 7 do spec.md
+// Persistência real é SwiftData + CloudKit (não um banco relacional com servidor),
+// mas o modelo abaixo representa a estrutura das duas tabelas locais/sincronizadas.
+
+Table documentos {
+  id uuid [pk, default: `gen_random_uuid()`]
+  titulo texto [not null, note: 'Nome do arquivo/documento exibido nas listas']
+  origem origem_documento [not null]
+  identificador_local blob [note: 'Bookmark de segurança (URL.bookmarkData). Nulo quando origem = github']
+  identificador_remoto texto [note: 'owner/repo/path da API do GitHub. Nulo quando origem != github']
+  favorito booleano [not null, default: false]
+  favoritado_em datetime [note: 'Nulo enquanto favorito = false']
+  aberto_em datetime [not null, note: 'Usado para ordenar Recentes (regra 11)']
+  criado_em datetime [not null, default: `now()`]
+  tamanho_bytes inteiro [note: 'Nulo quando o tamanho não pôde ser determinado']
+
+  // Constraints (não expressáveis nativamente em DBML, documentadas aqui):
+  // - identificador_local único quando não nulo
+  // - identificador_remoto único quando não nulo
+  // Estratégia de exclusão: hard delete (ver seção 7.2 do spec)
+
+  Note: 'Histórico (Recentes) e Favoritos do usuário — mesma tabela, diferenciados pelo campo favorito (trade-off declarado na seção 7.2)'
+}
+
+Table preferencias_usuario {
+  id uuid [pk, note: 'Valor fixo constante — garante singleton (uma linha só)']
+  tema tema_app [not null, default: 'sistema']
+  tema_sintaxe tema_sintaxe_codigo [not null, default: 'github']
+  fonte_leitura fonte_leitura [not null, default: 'sistema']
+  tamanho_fonte inteiro [not null, default: 17, note: 'Em pontos']
+  abrir_ultimo_arquivo_ao_iniciar booleano [not null, default: false]
+  compra_desbloqueada booleano [not null, default: false, note: 'Cache local do desbloqueio do trial (spec 8.9). Fonte de verdade real é o StoreKit/Apple']
+  data_compra datetime [note: 'Nulo enquanto compra_desbloqueada = false']
+  atualizado_em datetime [not null, default: `now()`]
+
+  Note: 'Tabela singleton — preferências de leitura e exibição do usuário, e cache local do estado de compra'
+}
+
+enum origem_documento {
+  arquivo_local
+  icloud_drive
+  google_drive
+  github
+  compartilhado
+}
+
+enum tema_app {
+  sistema
+  claro
+  escuro
+}
+
+enum tema_sintaxe_codigo {
+  github
+  dracula
+  monokai
+  solarized
+}
+
+enum fonte_leitura {
+  sistema
+  serifada
+  mono
+}
+
+// Não há Ref (relacionamento) entre documentos e preferencias_usuario — são
+// tabelas independentes por design (ver seção 7.1 do spec).
+
+// Fora deste modelo: o token OAuth do GitHub (roadmap v1.1) fica no Keychain
+// do iOS, nunca em uma tabela sincronizada via CloudKit (seção 7.6 do spec).

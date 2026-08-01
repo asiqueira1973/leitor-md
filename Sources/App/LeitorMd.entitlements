@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Entitlements do app Leitor.md.
+
+  App Group (spec 8.3) + iCloud/CloudKit (spec 8.6) habilitados. No Simulador
+  funcionam com assinatura ad-hoc; PARA DEVICE, o App ID no portal Apple precisa
+  ter estas capacidades habilitadas (App Groups, iCloud com o container
+  iCloud.com.dablab.leitormd, Push Notifications) — senão a assinatura falha.
+
+  Sem conta iCloud no aparelho, o app funciona local (sem sync), sem erro
+  (spec 6 / 8.6) — o ContainerModelo cai para armazenamento local nesse caso.
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>com.apple.security.application-groups</key>
+	<array>
+		<string>group.com.dablab.leitormd</string>
+	</array>
+	<key>com.apple.developer.icloud-container-identifiers</key>
+	<array>
+		<string>iCloud.com.dablab.leitormd</string>
+	</array>
+	<key>com.apple.developer.icloud-services</key>
+	<array>
+		<string>CloudKit</string>
+	</array>
+	<key>aps-environment</key>
+	<string>development</string>
+</dict>
+</plist>

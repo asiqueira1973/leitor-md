@@ -1,0 +1,33 @@
+/* Localização pt-BR (idioma principal) — textos-âncora da spec 15.
+   Estes são textos finais candidatos, usados como estão (spec 15). */
+
+/* Marca / seções */
+"app.nome" = "Leitor.md";
+"secao.recentes" = "Recentes";
+"secao.favoritos" = "Favoritos";
+
+/* Estados vazios (spec 15) */
+"recentes.vazio" = "Nenhum documento aberto ainda. Toque em Abrir para começar.";
+"favoritos.vazio" = "Seus documentos favoritos aparecem aqui.";
+
+/* Botões principais (spec 15) */
+"botao.abrir_arquivo" = "Abrir arquivo";
+"botao.abrir_github" = "Abrir do GitHub";
+
+/* Onboarding (spec 15) */
+"onboarding.1" = "Leia seus arquivos Markdown com qualidade de verdade.";
+"onboarding.2" = "Abra direto do iCloud, Google Drive, GitHub ou de qualquer outro app.";
+"onboarding.3" = "Sem edição, sem distração — só leitura, do jeito que devia ser.";
+"onboarding.pular" = "Pular";
+"onboarding.comecar" = "Começar";
+
+/* Exportação — Skill do Claude (spec 15) */
+"exportar.skill.nome" = "Nome do skill";
+"exportar.skill.descricao" = "Descreva em poucas palavras quando esse skill deve ser usado";
+
+/* Mensagens de erro (spec 12) */
+"erro.bookmark" = "Não foi possível abrir este arquivo. Ele pode ter sido movido ou apagado.";
+"erro.github.rate_limit" = "Limite de acesso ao GitHub atingido. Tente novamente às %@.";
+"erro.github.nao_encontrado" = "Repositório ou arquivo não encontrado (ou é privado — login chegando em breve).";
+"erro.extensao_invalida" = "Este app só abre arquivos Markdown (.md, .markdown, .mdown, .mkd).";
+"erro.rede" = "Não foi possível baixar o arquivo agora. Verifique sua conexão e tente de novo.";
