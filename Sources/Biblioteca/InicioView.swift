@@ -157,6 +157,9 @@ struct InicioView: View {
         if SeedDebug.deveTestarExportacao {
             Task { await SeedDebug.testarExportacao() }
         }
+        if ProcessInfo.processInfo.environment["OPEN_CONFIG"] == "1" {
+            mostrarConfiguracoes = true
+        }
         if ProcessInfo.processInfo.environment["OPEN_EXEMPLO"] == "1" {
             let descritor = FetchDescriptor<Documento>(
                 sortBy: [SortDescriptor(\.abertoEm, order: .reverse)]

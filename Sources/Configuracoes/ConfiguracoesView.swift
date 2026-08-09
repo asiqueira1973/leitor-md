@@ -1,8 +1,9 @@
-// ConfiguracoesView.swift — tela de Configurações (spec 10 / 8.5).
+// ConfiguracoesView.swift — tela de Configurações (spec 10 / 8.5 / 8.9).
 //
 // Lê e escreve o singleton PreferenciasUsuario (spec 7.3): tema, fonte, tamanho e
-// "abrir último arquivo ao iniciar", além de "Sobre". "Restaurar compra" entra no
-// épico 8.9.
+// "abrir último arquivo ao iniciar", além de "Sobre". Na seção Compra oferece
+// abrir o Paywall manualmente ("Desbloquear leitura ilimitada" — acesso previsto
+// no inventário de telas da spec 10) e "Restaurar compra" (spec 8.9/23).
 
 import SwiftUI
 import SwiftData
@@ -14,6 +15,7 @@ struct ConfiguracoesView: View {
     @State private var prefs: PreferenciasUsuario?
     @State private var loja = LojaStoreKit()
     @State private var restaurando = false
+    @State private var mostrarPaywall = false
 
     var body: some View {
         NavigationStack {
@@ -26,6 +28,14 @@ struct ConfiguracoesView: View {
                         Label("Leitura ilimitada ativa", systemImage: "checkmark.seal")
                             .foregroundStyle(Paleta.destaque)
                     } else {
+                        // Acesso manual ao Paywall (spec 10) — torna a compra fácil de
+                        // encontrar (exigência da revisão da App Store).
+                        Button {
+                            mostrarPaywall = true
+                        } label: {
+                            Label("Desbloquear leitura ilimitada", systemImage: "lock.open")
+                                .foregroundStyle(Paleta.destaque)
+                        }
                         // "Restaurar compra" sempre acessível — guideline de revisão (spec 8.9/23).
                         Button {
                             Task { await restaurar() }
@@ -52,7 +62,17 @@ struct ConfiguracoesView: View {
             .task {
                 if prefs == nil { prefs = PreferenciasRepositorio.buscarOuCriar(em: contexto) }
             }
+            .sheet(isPresented: $mostrarPaywall) {
+                PaywallView(loja: loja) { marcarComprado() }
+            }
         }
+    }
+
+    // Marca a compra no cache local após comprar/restaurar pelo Paywall (spec 7.3/8.9).
+    private func marcarComprado() {
+        guard let prefs else { return }
+        prefs.compraDesbloqueada = true
+        prefs.dataCompra = Date()
     }
 
     // Restaura a compra via StoreKit e atualiza o cache local (spec 8.9).
