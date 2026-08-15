@@ -2,8 +2,10 @@
 
 **Versão do documento:** 1.5
 **Responsável de produto:** Alexandre Siqueira
-**Status:** rascunho
-**Data:** 2026-08-01
+**Status:** implementado — v1.0 (épicos 8.1–8.9) construída e submetida à App Store
+**Data (spec original):** 2026-08-01
+
+> **Nota pós-implementação:** este documento permanece como a **intenção de produto** (critérios de aceite da seção 8, regras da seção 11, princípios da seção 0). O sistema **como foi construído de fato** — e onde ele diverge deste spec — está em **`DOCUMENTACAO-TECNICA.md`** (ver a seção 6, "Divergências"). **Onde houver conflito entre este spec e a doc técnica, vale a doc técnica.** Para qualquer mudança, siga o protocolo da seção 29.
 
 ## Como usar este documento
 

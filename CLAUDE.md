@@ -6,19 +6,24 @@ Este arquivo é lido automaticamente pelo Claude Code em toda sessão neste repo
 
 Leitor.md é um app iOS/iPadOS (nativo, Swift/SwiftUI) para **ler** arquivos Markdown com boa tipografia e renderização completa (GFM, código, LaTeX, Mermaid), com integração a iCloud Drive, Google Drive, compartilhamento de outros apps e GitHub. Não é um editor. A fonte de verdade completa do produto é:
 
-- **`spec-leitor-md.md`** (na raiz do repositório) — a especificação funcional e técnica completa, com 29 seções numeradas. Toda decisão de UX, dado, regra de negócio e critério de aceite está lá.
+- **`spec-leitor-md.md`** (na raiz do repositório) — a especificação funcional, com 29 seções numeradas. É a **intenção de produto**: critérios de aceite (seção 8), regras de negócio (seção 11), princípios (seção 0). Use como referência de *o que o produto deve fazer*.
+- **`DOCUMENTACAO-TECNICA.md`** (na raiz) — descreve o sistema **como foi construído de fato**, com a seção 6 "Divergências" onde a implementação difere do spec. É a referência de *como está feito*. **Onde o spec e a realidade divergirem, vale a doc técnica.**
 - **`modelo-leitor-md.dbml`** (na raiz do repositório) — o modelo de dados (SwiftData) da seção 7 do spec, pronto para visualizar em dbdiagram.io.
 
-**Sempre que uma tarefa envolver o produto, releia a seção relevante do `spec-leitor-md.md` antes de codar** — não trabalhe de memória de uma conversa anterior nem invente comportamento que não está lá.
+**Sempre que uma tarefa envolver o produto, releia a seção relevante do `spec-leitor-md.md` (intenção) E confirme o "como está" na `DOCUMENTACAO-TECNICA.md`** — não trabalhe de memória de uma conversa anterior nem invente comportamento que não está lá.
 
 ## Estado atual do projeto
 
-Ainda não implementado — este é o ponto de partida. A primeira sessão de implementação deve:
+**O app está implementado e publicado.** Todo o MVP (épicos 8.1 a 8.9, com o DOCX adiado para a v1.1 por ser best-effort — seção 24) foi construído, testado no Simulador e submetido à App Store (versão 1.0). **NÃO recomece do zero, não re-scaffolde o projeto, e não olhe o `hora-do-remedio` como ponto de partida** (ele é Expo/React Native — só o prefixo de bundle `com.dablab.*` e o team `XGZW6Y6K25` foram reaproveitados; o projeto aqui usa XcodeGen).
 
-1. **Olhar a pasta `hora-do-remedio`** (outro app iOS do Alexandre, mesma máquina, mesma conta de desenvolvedor Apple) e reaproveitar o que fizer sentido: prefixo de bundle ID, team de assinatura, abordagem de projeto Xcode (xcodegen vs `.xcodeproj` manual) e convenções de estrutura de pastas — ver seção 4 do spec. Não copiar cegamente o que for específico do domínio daquele app (lembretes de remédio); só a parte de configuração/infraestrutura.
-2. Montar um plano e lista de tarefas **antes de codar**, e mostrar para aprovação — incluindo o que precisa ser feito manualmente por fora (Xcode/App Store Connect/GitHub), não só o que o Claude Code vai codar.
-3. Implementar primeiro o modelo de dados (seção 7 do spec), depois as telas (seção 10), seguindo a ordem dos épicos 8.1 → 8.9 (deixando o DOCX, dentro do 8.7, por último — é best-effort, ver seção 24).
-4. Não implementar nada da seção 28 (Roadmap v1.1/v2) nesta fase — está fora do MVP por decisão explícita.
+Para **evoluir com segurança** (não quebrar o que já funciona):
+
+1. **Leia a `DOCUMENTACAO-TECNICA.md` antes de mexer** — principalmente a seção 6 (Divergências): XcodeGen em vez de espelhar o hora-do-remedio, CloudKit local-first com fallback, Share Extension com handoff App-Store-safe (abre na próxima abertura, sem truque de openURL), detecção de Google Drive best-effort, DOCX adiado, etc.
+2. **Siga o protocolo da seção 29 do spec**: commit de checkpoint antes de mexer, peça/aprove a lista de arquivos antes de codar, diga explicitamente o que **não** deve mudar, e reverta o que passar do escopo.
+3. **Rode os testes** (`Tests/`, ~36 casos das regras da seção 11) antes e depois — guardam ordenação/teto de Recentes, extensões aceitas, kebab-case do Skill, portão de trial, resolução de URL do GitHub, handoff, favoritar.
+4. **Regenere o projeto com `xcodegen generate`** após adicionar/remover arquivos `.swift` ou mexer no `project.yml` (o `.xcodeproj` é gerado, não versionado; `brew install xcodegen`).
+5. **Atualize a `DOCUMENTACAO-TECNICA.md` no mesmo commit** de qualquer mudança de modelo de dados ou lógica de tela (Definition of Done, seção 26).
+6. Nada da seção 28 (Roadmap v1.1/v2 — DOCX, login GitHub, árvore de repo, anotações, widget) entra sem pedido explícito.
 
 ## Convenções não-negociáveis (seção 18 do spec)
 
