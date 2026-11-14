@@ -1,80 +1,103 @@
 # Leitor.md
 
-App iOS/iPadOS nativo (Swift/SwiftUI) para **ler** arquivos Markdown com boa tipografia e
-renderização completa (GFM, código, LaTeX, Mermaid). Não é um editor. Fonte de verdade do
-produto: [`spec-leitor-md.md`](spec-leitor-md.md) (29 seções) e
-[`modelo-leitor-md.dbml`](modelo-leitor-md.dbml) (modelo de dados da §7).
+App iOS/iPadOS nativo para ler arquivos Markdown com boa tipografia e renderização completa (GFM, código, LaTeX e Mermaid). Não é um editor.
 
-## Pré-requisitos
+[Baixar na App Store](https://apps.apple.com/br/app/leitor-md/id6797046582)
 
-- **Xcode 26+** (testado com 26.1.1) e iOS 17.0+ como alvo mínimo.
-- **XcodeGen** (`brew install xcodegen`) — o projeto Xcode é gerado, não versionado.
+## Principais funcionalidades
 
-## Setup local
+- Abre `.md`, `.markdown`, `.mdown` e `.mkd` do aparelho, do iCloud Drive, do Google Drive (pelo app Arquivos), recebidos de outros apps (Share Extension) e de URLs públicas do GitHub.
+- Renderização de GitHub Flavored Markdown (tabelas, listas de tarefas, notas de rodapé), realce de sintaxe, fórmulas LaTeX (KaTeX) e diagramas Mermaid, tudo embarcado e offline.
+- Modo claro/escuro/sistema, temas de realce de código, escolha de fonte e tamanho de leitura.
+- Sumário automático a partir dos títulos.
+- Recentes e Favoritos sincronizados via iCloud, sem conta própria do app.
+- Exportação para PDF, HTML e Skill do Claude (arquivo `.skill`).
+- Português do Brasil e inglês.
+- Download grátis com 1 documento de teste e compra única para uso ilimitado (sem assinatura).
 
-O `.xcodeproj` é gerado a partir de [`project.yml`](project.yml) e fica no `.gitignore`.
+## Stack técnica
+
+- Swift, SwiftUI, iOS/iPadOS 17+
+- SwiftData com CloudKit (sincronização de Recentes/Favoritos)
+- WKWebView com markdown-it, highlight.js, KaTeX e Mermaid empacotados localmente (`WebBundle/`)
+- StoreKit 2 (compra única não-consumível)
+- GitHub Contents API pública (sem login)
+- XcodeGen (`project.yml`) para gerar o projeto Xcode; XCTest para testes
+
+## Como foi construído
+
+O app foi desenvolvido com Claude (Anthropic) a partir de uma especificação SDD, a [`spec-leitor-md.md`](spec-leitor-md.md), com o modelo de dados em [`modelo-leitor-md.dbml`](modelo-leitor-md.dbml). O sistema como foi construído de fato, com as divergências em relação à spec, está em [`DOCUMENTACAO-TECNICA.md`](DOCUMENTACAO-TECNICA.md).
+
+O que existe no repositório para manter a qualidade:
+
+- [`CLAUDE.md`](CLAUDE.md) com as instruções lidas pelo Claude Code em toda sessão: fontes de verdade, convenções obrigatórias, decisões de arquitetura fechadas e o protocolo de mudanças incrementais da spec.
+- Testes automatizados (`Tests/`) das regras de negócio: extensões aceitas, ordenação e teto de Recentes, resolução de URL do GitHub, classificação de origem, handoff da Share Extension, regra de favoritar, portão do trial e geração do `SKILL.md`.
+
+## Status
+
+Publicado na App Store (iOS/iPadOS).
+
+## Como rodar
+
+Pré-requisitos: Xcode 26+ e [XcodeGen](https://github.com/yonaskolb/XcodeGen) (`brew install xcodegen`). O `.xcodeproj` é gerado a partir do `project.yml` e não é versionado.
 
 ```bash
-# 1. Gerar o projeto Xcode
+# Gerar o projeto Xcode
 xcodegen generate
 
-# 2. Abrir no Xcode
-open LeitorMd.xcodeproj
-
-# ou, pela linha de comando, buildar para o Simulador:
+# Buildar para o Simulador
 xcodebuild build -project LeitorMd.xcodeproj -scheme LeitorMd \
   -sdk iphonesimulator \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
   CODE_SIGNING_ALLOWED=NO
 
-# 3. Rodar os testes das regras de negócio (spec 11 / 22)
+# Rodar os testes
 xcodebuild test -project LeitorMd.xcodeproj -scheme LeitorMd \
   -sdk iphonesimulator \
   -destination 'platform=iOS Simulator,name=iPhone 17 Pro Max' \
   CODE_SIGNING_ALLOWED=NO
 ```
 
-> Sempre que mexer no `project.yml` ou adicionar/remover arquivos, rode `xcodegen generate` de novo.
+Sempre que mexer no `project.yml` ou adicionar/remover arquivos, rode `xcodegen generate` de novo. Para assinar e rodar num aparelho, troque o time de desenvolvimento no `project.yml` pelo seu.
 
-## Estrutura de pastas (spec 18)
+### Estrutura de pastas
 
 ```
 project.yml            # XcodeGen — fonte de verdade do projeto Xcode
 Sources/
-  App/                 # ponto de entrada, Info.plist, entitlements, raiz
-  ModeloDeDados/       # @Model SwiftData (spec 7), enums, ModelContainer
+  App/                 # ponto de entrada, Info.plist, entitlements
+  ModeloDeDados/       # @Model SwiftData, enums, ModelContainer
   Abertura/            # pickers, handoff da Share Extension, fluxo GitHub
-  Leitura/             # WebView, renderização, TOC, exportação
-  Biblioteca/          # Recentes/Favoritos
-  Configuracoes/       # preferências, restaurar compra
-  Compartilhado/       # UI reutilizável, paleta, regras de negócio puras
-ShareExtension/        # Share Extension (spec 8.3)
-WebBundle/             # HTML/CSS/JS local de renderização (spec 8.5)
-Resources/             # Assets.xcassets (ícone + cores), pt-BR/en.lproj
-Tests/                 # testes das regras puras (spec 11)
+  Leitura/             # WebView, renderização, sumário, exportação
+  Biblioteca/          # Recentes/Favoritos, onboarding
+  Configuracoes/       # preferências, paywall, StoreKit
+  Compartilhado/       # paleta, regras de negócio puras
+ShareExtension/        # Share Extension
+WebBundle/             # HTML/CSS/JS local de renderização (bibliotecas em vendor/)
+Resources/             # Assets.xcassets, pt-BR/en.lproj
+Tests/                 # testes das regras de negócio
 ```
 
-## Convenções de código (spec 18)
+## Créditos de terceiros
 
-- Modelo de dados em **português `snake_case`** nos nomes de tabela/enum (spec 7); as
-  properties Swift espelham 1:1 os campos da spec, em português camelCase
-  (ex.: `abertoEm`, `compraDesbloqueada`).
-- Código/tipos/arquivos Swift em inglês idiomático; a fronteira de idioma fica no modelo.
-- Toda função/`ViewModel`/rotina leva comentário de cabeçalho em português citando a seção
-  da spec que implementa.
+As bibliotecas abaixo estão empacotadas em `WebBundle/vendor/` e mantêm os avisos de copyright e licença originais nos próprios arquivos (ou nos repositórios de origem):
 
-## Estado atual
+- [markdown-it](https://github.com/markdown-it/markdown-it) 14.1.0 — MIT
+- [markdown-it-footnote](https://github.com/markdown-it/markdown-it-footnote) 4.0.0 — MIT
+- [markdown-it-task-lists](https://github.com/revin/markdown-it-task-lists) 2.1.0 — ISC
+- [markdown-it-texmath](https://github.com/goessner/markdown-it-texmath) — MIT, © Stefan Goessner
+- [highlight.js](https://github.com/highlightjs/highlight.js) 11.10.0 e temas — BSD-3-Clause, © Josh Goebel e colaboradores
+- [KaTeX](https://github.com/KaTeX/KaTeX) 0.16.11, incluindo as fontes woff2 — MIT
+- [Mermaid](https://github.com/mermaid-js/mermaid) 11.3.0 — MIT
 
-Implementado: **scaffolding (Fase 0)** + **modelo de dados SwiftData (spec 7, Fase 1)** +
-testes das regras da spec 11. Próximos: épicos 8.1 → 8.9 na ordem da spec (DOCX por último).
+## Licença
 
-**Local-first agora:** o `ModelContainer` roda com store local (sem exigir setup de
-CloudKit/App Group no portal Apple). A sincronização iCloud (spec 8.6) e o App Group da
-Share Extension (spec 8.3) são ativados nos respectivos épicos — ver comentários em
-`Sources/ModeloDeDados/ContainerModelo.swift`.
+O código está disponível apenas para leitura e estudo. Veja [LICENSE](LICENSE). Isso vale para o código da Dab Lab; as bibliotecas de terceiros listadas acima continuam sob as licenças delas.
 
-## Passos manuais pendentes (fora do código)
+## Contribuições
 
-Ver `spec-leitor-md.md` §27. Em resumo, ainda faltam: habilitar capabilities no App ID,
-criar App Group + App ID da extensão (no épico 8.3), enviar ícone de marketing, política de
-privacidade. Bundle ID do app: `com.dablab.leitormd`; team de assinatura: `XGZW6Y6K25`.
+Issues são bem-vindas; pull requests não são aceitos. Veja [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+Feito pela [Dab Lab](https://www.dablab.com.br/) — agência de inovação no-code para startups e PMEs, com automações usando IA.
